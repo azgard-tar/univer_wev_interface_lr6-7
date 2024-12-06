@@ -27,19 +27,17 @@ public class TicketController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] Ticket ticket)
+    public async Task<IActionResult> Create([FromBody] CreateTicket ticket)
     {
-        var result = await _ticketService.CreateAsync(ticket);
-        if (!result) return BadRequest("A ticket with the same number already exists.");
-        return Ok(ticket);
+        return Ok(await _ticketService.CreateAsync(ticket));
     }
 
     [HttpPut("{id:guid}")]
-    public async Task<IActionResult> Update(Guid id, [FromBody] Ticket ticket)
+    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateTicket ticket)
     {
         var result = await _ticketService.UpdateAsync(id, ticket);
-        if (!result) return NotFound();
-        return Ok(ticket);
+        if (result == null) return NotFound();
+        return Ok(result);
     }
 
     [HttpDelete("{id:guid}")]

@@ -22,17 +22,17 @@ public class UserController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(User user)
+    public async Task<IActionResult> Create(CreateUser user)
     {
-        var created = await _userService.CreateAsync(user);
-        return created ? CreatedAtAction(nameof(GetById), new { id = user.Id }, user) : Conflict("User with the same email already exists.");
+        return Ok(await _userService.CreateAsync(user));
     }
 
     [HttpPut("{id:guid}")]
-    public async Task<IActionResult> Update(Guid id, User user)
+    public async Task<IActionResult> Update(Guid id, UpdateUser user)
     {
-        var updated = await _userService.UpdateAsync(id, user);
-        return updated ? NoContent() : NotFound();
+        var result = await _userService.UpdateAsync(id, user);
+        if (result == null) return NotFound();
+        return Ok(result);
     }
 
     [HttpDelete("{id:guid}")]

@@ -27,19 +27,17 @@ public class SprintController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] Sprint sprint)
+    public async Task<IActionResult> Create([FromBody] CreateSprint sprint)
     {
-        var result = await _sprintService.CreateAsync(sprint);
-        if (!result) return BadRequest("A sprint with the same name already exists.");
-        return Ok(sprint);
+        return Ok(await _sprintService.CreateAsync(sprint));
     }
 
     [HttpPut("{id:guid}")]
-    public async Task<IActionResult> Update(Guid id, [FromBody] Sprint sprint)
+    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateSprint sprint)
     {
         var result = await _sprintService.UpdateAsync(id, sprint);
-        if (!result) return NotFound();
-        return Ok(sprint);
+        if (result == null) return NotFound();
+        return Ok(result);
     }
 
     [HttpDelete("{id:guid}")]
